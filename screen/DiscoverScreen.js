@@ -1,11 +1,23 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
-import { Text, Image, View, ScrollView } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
-import worldCharts from "../data/worldCharts.json";
-const DiscoveryScreen = () => {
-  const [data, setData] = useState(worldCharts);
 
+//   native packages
+
+import { Text, Image, View, ScrollView, Pressable } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { Picker } from "@react-native-picker/picker";
+
+// importing data 
+import worldCharts from "../data/worldCharts.json";
+
+// importing linear gradients 
+import { LinearGradient } from "expo-linear-gradient";
+
+import axios from "axios";
+
+const DiscoveryScreen = () => {
+
+  const [data, setData] = useState(worldCharts);
+  const [selectedValue, setSelectedValue] = useState("sort");
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -14,29 +26,32 @@ const DiscoveryScreen = () => {
   }, []);
 
   useEffect(() => {
-    //  axios
-    //    .get("https://shazam-core.p.rapidapi.com/v1/charts/genre-world", {
-    //      params: { genre_code: "POP" },
-    //      headers: {
-    //        "X-RapidAPI-Key":
-    //          "4fbcfea748msh22a8e752a443b6dp15a8afjsn3b3623db9eae",
-    //        "X-RapidAPI-Host": "shazam-core.p.rapidapi.com",
-    //      },
-    //    })
-    //    .then((res) => {
-    //      setData(res.data);
-    //    })
-    //    .catch((err) => {
-    //      console.log(err);
-    //    });
-  }, []);
+     axios
+       .get("https://shazam-core.p.rapidapi.com/v1/charts/genre-world", {
+         params: { genre_code: selectedValue },
+         headers: {
+           "X-RapidAPI-Key":
+             "4fbcfea748msh22a8e752a443b6dp15a8afjsn3b3623db9eae",
+           "X-RapidAPI-Host": "shazam-core.p.rapidapi.com",
+         },
+       })
+       .then((res) => {
+         setData(res.data);
+       })
+       .catch((err) => {
+         console.log(err);
+       });
+  }, [selectedValue]);
+
+  const genre = ['POP','HIP_HOP_RAP','DANCE','ELECTRONIC','SOUL_RNB','ALTERNATIVE','ROCK','LATIN','FILM_TV','COUNTRY','AFRO_BEATS','WORLDWIDE','REGGAE_DANCE_HALL','HOUSE','K_POP','FRENCH_POP','SINGER_SONGWRITER','REG_MEXICO']
 
   return (
-    <View
+    <LinearGradient
+      colors={["#ce78f0", "#ff70a0", "#ffc02e"]}
       style={{
         height: "100%",
         width: "100%",
-        backgroundColor: "#ffc02e",
+
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -49,15 +64,24 @@ const DiscoveryScreen = () => {
           height: "20%",
           display: "flex",
           flexDirection: "row",
-          justifyContent: "center",
-          itemsCenter: "center",
+          justifyContent: "space-between",
+          alignItems : "flex-end",
+          paddingTop: 10,
+          paddingBottom: 10,
+          paddingLeft: 20,
+          paddingRight: 20,
+          // backgroundColor: "red",
         }}
       >
-        <Text style={{ fontSize: 25, fontWeight: "700" }}>Sort by</Text>
+        <Text style={{width:"50%", fontSize: 25, fontWeight: "700" }}>Discover </Text>
 
-        {/* <select name="genre" id="genre">
-            map options
-         </select> */}
+        <View style={{height : 40 , width : "35%" }}>
+           <Picker selectedValue={selectedValue}  onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)} > 
+              {genre?.map((d ,index )=>{
+                  return <Picker.Item key={index} value={d} label={d} style={{fontWeight: "700"}} />
+              })}
+           </Picker>
+        </View>
       </View>
 
       <ScrollView
@@ -80,7 +104,10 @@ const DiscoveryScreen = () => {
         >
           {data.map((d) => {
             return (
-              <View
+              <Pressable
+                onPress={() => {
+                  navigation.navigate(`DiscoverUnique`, d.key);
+                }}
                 key={d.key}
                 style={{
                   height: 300,
@@ -98,12 +125,12 @@ const DiscoveryScreen = () => {
                     style={{ height: "100%", width: "100%" }}
                   ></Image>
                 </View>
-              </View>
+              </Pressable>
             );
           })}
         </View>
       </ScrollView>
-    </View>
+    </LinearGradient>
   );
 };
 

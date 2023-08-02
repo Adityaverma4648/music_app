@@ -13,6 +13,12 @@ import SearchScreen from "./screen/SearchScreen";
 import LibraryScreen from "./screen/LibraryScreen";
 import LikedScreen from "./screen/LikedScreen";
 import ConcertScreen from "./screen/ConcertScreen";
+import RecentScreen from "./screen/RecentScreen";
+import SingleDiscoverScreen from "./screen/SingleDiscoverScreen";
+import NotificationScreen from "./screen/NotificationScreen";
+
+
+
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +29,9 @@ export default function App() {
       <Stack.Navigator initialRouteName="Home" >
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Discover" component={DiscoverScreen} />
+
+        <Stack.Screen name="DiscoverUnique" component={SingleDiscoverScreen} />
+
         <Stack.Screen name="Search" component={SearchScreen} />
          <Stack.Screen
           name="Liked"
@@ -35,6 +44,14 @@ export default function App() {
          <Stack.Screen
           name="Concert"
           component={ConcertScreen}
+        /> 
+         <Stack.Screen
+          name="Recent"
+          component={RecentScreen}
+        /> 
+        <Stack.Screen
+          name="Notification"
+          component={NotificationScreen}
         /> 
       </Stack.Navigator>
       <Footer />

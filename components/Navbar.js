@@ -71,7 +71,7 @@ const Navbar = () => {
                 setSearchBar(!searchBar);
               }}
             >
-              {searchBar ? (
+              {!searchBar ? (
                 <MagnifyingGlassIcon
                   size={30}
                   style={{ color: "#000", fontWeight: "700" }}
